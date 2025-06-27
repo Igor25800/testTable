@@ -1,0 +1,5 @@
+<h2 class="center" mat-dialog-title>{{ title() | titlecase }}</h2>
+<mat-dialog-actions class="center">
+  <button mat-raised-button color="primary" (click)="save()">{{ typeNameBtn() }}</button>
+  <button mat-raised-button [mat-dialog-close]="" cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>

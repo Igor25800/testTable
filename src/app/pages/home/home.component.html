@@ -1,0 +1,6 @@
+<button mat-raised-button color="primary" (click)="openDialog( undefined,'create')">Add</button>
+<app-table
+  [dataSource]="tableDataSource()"
+  [displayedColumns]="homeState.displayedColumns()"
+  (eventOpenDialog)="openDialog($event.item, $event.type)"
+/>

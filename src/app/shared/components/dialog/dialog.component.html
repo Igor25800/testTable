@@ -1,0 +1,19 @@
+<h2 class="center" mat-dialog-title>{{ title() | titlecase}} Dialog</h2>
+<mat-dialog-content class="colum" [formGroup]="dialogForm">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Weight</mat-label>
+    <input matInput formControlName="weight"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Symbol</mat-label>
+    <input matInput formControlName="symbol"/>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions class="center">
+  <button mat-raised-button color="primary" (click)="onNoClick()">{{ title() | titlecase }}</button>
+  <button mat-raised-button [mat-dialog-close]="" cdkFocusInitial>Cancel</button>
+</mat-dialog-actions>

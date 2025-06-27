@@ -1,0 +1,11 @@
+.colum {
+  display: flex;
+  flex-direction: column;
+}
+
+.center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
