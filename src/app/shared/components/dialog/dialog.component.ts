@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {
   MAT_DIALOG_DATA, MatDialog,
   MatDialogActions,
@@ -12,6 +12,7 @@ import {TableComponent} from '../table/table.component';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ConfirmationDialogComponent} from '../сonfirmationDialog/сonfirmation-dialog.component';
 import {TitleCasePipe} from '@angular/common';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-dialog',
@@ -34,6 +35,7 @@ import {TitleCasePipe} from '@angular/common';
 })
 
 export class DialogComponent implements OnInit {
+  private _destroyRef = inject(DestroyRef);
   readonly dialog = inject(MatDialog);
   readonly dialogRef = inject(MatDialogRef<TableComponent>);
   data = inject(MAT_DIALOG_DATA);
@@ -71,6 +73,7 @@ export class DialogComponent implements OnInit {
       });
 
       dialogRef.afterClosed().pipe(
+        takeUntilDestroyed(this._destroyRef)
       ).subscribe(result => {
         if (result) {
           this.dialogRef.close(this.dialogForm.value);

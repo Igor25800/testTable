@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, Signal} from '@angular/core'
+import {Component, computed, DestroyRef, inject, OnInit, Signal} from '@angular/core'
 import {TableComponent} from '../../shared/components/table/table.component';
 import {HomeStore} from '../../store/home/home.store';
 import {MatTableDataSource} from '@angular/material/table';
@@ -8,6 +8,7 @@ import {ComponentType} from '@angular/cdk/portal';
 import {DialogComponent} from '../../shared/components/dialog/dialog.component';
 import {ConfirmationDialogComponent} from '../../shared/components/сonfirmationDialog/сonfirmation-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-home',
@@ -21,6 +22,7 @@ import {MatDialog} from '@angular/material/dialog';
 })
 export class HomeComponent implements OnInit {
   homeState = inject(HomeStore);
+  private _destroyRef = inject(DestroyRef);
   readonly dialog = inject(MatDialog);
   tableDataSource: Signal<MatTableDataSource<PeriodicElement>> = computed(() =>
     new MatTableDataSource(this.homeState.elements())
@@ -46,7 +48,9 @@ export class HomeComponent implements OnInit {
         width: isType ? '400px' : ''
       });
 
-      dialogRef.afterClosed().subscribe(result => {
+      dialogRef.afterClosed().pipe(
+        takeUntilDestroyed(this._destroyRef)
+      ).subscribe(result => {
         if (result) {
           switch (type) {
             case 'create':

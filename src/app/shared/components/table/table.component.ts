@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, input, OnInit, output} from '@angular/core'
+import {ChangeDetectionStrategy, Component, DestroyRef, inject, input, OnInit, output} from '@angular/core'
 import {
   MatCell,
   MatCellDef,
@@ -12,6 +12,7 @@ import {MatFormField, MatInput, MatLabel} from '@angular/material/input';
 import {MatButton} from '@angular/material/button';
 import {PeriodicElement} from '../../../store/home/home.model';
 import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-table',
@@ -40,6 +41,7 @@ import {debounceTime, distinctUntilChanged, Subject} from 'rxjs';
 
 export class TableComponent implements OnInit {
   private _filterSubject = new Subject<string>();
+  private _destroyRef = inject(DestroyRef);
   displayedColumns = input.required<string[]>();
   dataSource = input.required<MatTableDataSource<PeriodicElement>>();
   eventOpenDialog = output<{ type: string, item: PeriodicElement }>();
@@ -52,6 +54,7 @@ export class TableComponent implements OnInit {
     this._filterSubject.pipe(
       debounceTime(2000),
       distinctUntilChanged(),
+      takeUntilDestroyed(this._destroyRef)
     ).subscribe(filterValue => {
       this.dataSource().filter = filterValue.trim().toLowerCase();
     });
